@@ -26,7 +26,9 @@ async def proxy(
             method,
             url,
             headers=headers,
-            content=body
+            content=body,
+            follow_redirects=True,  # segue redirecionamentos
+            verify=False            # ignora validação do certificado (não recomendado em produção)
         )
 
     return Response(content=resp.content, status_code=resp.status_code, headers=dict(resp.headers))
