@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install --no-cache-dir fastapi uvicorn httpx
+RUN pip install --no-cache-dir fastapi uvicorn requests
 
 EXPOSE 8000
 

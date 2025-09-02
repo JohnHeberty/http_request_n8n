@@ -1,16 +1,16 @@
 # Proxy Redirect API
 # Instale as dependências com:
-# pip install fastapi uvicorn httpx
+# pip install fastapi uvicorn requests
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, JSONResponse
 from fastapi import Body
-import httpx
+import requests
 
 app = FastAPI()
 
 @app.post("/proxy")
-async def proxy(
+def proxy(
     payload: dict = Body(...)
 ):
     # Espera um JSON com: url, method, headers, body
@@ -18,17 +18,18 @@ async def proxy(
     method = payload.get("method", "GET").upper()
     headers = payload.get("headers", {})
     body = payload.get("body", None)
+    
     if not url:
         return JSONResponse({"error": "url é obrigatório"}, status_code=400)
 
-    async with httpx.AsyncClient(verify=False) as client:
-        resp = await client.request(
-            method,
-            url,
-            headers=headers,
-            content=body,
-            follow_redirects=True
-        )
+    # Usa requests para fazer a requisição
+    resp = requests.request(
+        method,
+        url,
+        headers=headers,
+        data=body,
+        verify=False
+    )
 
     return Response(content=resp.content, status_code=resp.status_code, headers=dict(resp.headers))
 
