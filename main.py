@@ -21,14 +21,13 @@ async def proxy(
     if not url:
         return JSONResponse({"error": "url é obrigatório"}, status_code=400)
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(verify=False) as client:
         resp = await client.request(
             method,
             url,
             headers=headers,
             content=body,
-            follow_redirects=True,  # segue redirecionamentos
-            verify=False            # ignora validação do certificado (não recomendado em produção)
+            follow_redirects=True
         )
 
     return Response(content=resp.content, status_code=resp.status_code, headers=dict(resp.headers))
